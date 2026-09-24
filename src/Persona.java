@@ -1,4 +1,4 @@
-import java.util.*;
+
 
 public class Persona {
     private String nome;
@@ -8,6 +8,12 @@ public class Persona {
     private int eta;
 
     public Persona(String nome, String cognome, String indirizzo, String telefono, int eta) {
+        if (nome == null || cognome == null || indirizzo == null || telefono == null || nome.equals("") || cognome.equals("") || indirizzo.equals("") || telefono.equals("")) {
+            throw new IllegalArgumentException("I campi non possono essere vuoti");
+        }
+        if (eta < 0) {
+            throw new IllegalArgumentException("L'età non può essere negativa");
+        }
         this.nome = nome;
         this.cognome = cognome;
         this.indirizzo = indirizzo;

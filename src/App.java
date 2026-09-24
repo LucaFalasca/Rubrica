@@ -7,6 +7,7 @@ public class App {
     static JTable tabellaRubrica;
     static DefaultTableModel modelloTabella;
     static ArrayList<Persona> rubrica;
+    static PersonaDataModel personaDataModel;
     public static void main(String[] args) throws Exception {
 
         Persona persona1 = new Persona("Mario", "Rossi", "Via Roma 1", "1234567890", 30);
@@ -22,6 +23,8 @@ public class App {
         rubrica.add(persona1);
         rubrica.add(persona2);
         rubrica.add(persona3);
+        String[] colonne = {"Nome", "Cognome", "Telefono"};
+        personaDataModel = new PersonaDataModel(rubrica, colonne);
 
         JFrame finestra = new JFrame("Rubrica");
         finestra.setLayout(new BorderLayout());
@@ -31,17 +34,7 @@ public class App {
         
         JPanel pannello = new JPanel();
 
-        String[] colonne = {"Nome", "Cognome", "Telefono"};
-
-        Object[][] dati = new Object[rubrica.size()][3];
-        for (int i = 0; i < rubrica.size(); i++) {
-            Persona persona = rubrica.get(i);
-            dati[i][0] = persona.getNome();
-            dati[i][1] = persona.getCognome();
-            dati[i][2] = persona.getTelefono();
-        }
-
-        tabellaRubrica = new JTable(dati, colonne);
+        tabellaRubrica = new JTable(personaDataModel);
 
         pannello.add(new JScrollPane(tabellaRubrica));
 
@@ -65,28 +58,42 @@ public class App {
     }
 
     private static void bottoneNuovoAction() {
-        // Logica per il bottone "Nuovo"
-        EditorPersona editor = new EditorPersona();
-        editor.setSize(400, 300);
-        editor.setVisible(true);
+        try{
+            EditorPersona editor = new EditorPersona(Persona.class);
+            editor.setSize(400, 300);
+            editor.setVisible(true);
+        }
+        catch(Exception e){
+            System.out.println("ErroreNuovo" + e);
+        }
+        
     }
 
     private static void bottoneModificaAction() {
-        // Logica per il bottone "Modifica"
-        int riga = tabellaRubrica.getSelectedRow();
-        Persona personaSelezionata = rubrica.get(riga);
-        EditorPersona editor = new EditorPersona(personaSelezionata);
-        editor.setSize(400, 300);
-        editor.setVisible(true);
+        if(tabellaRubrica.getSelectedRow() != -1){
+            int riga = tabellaRubrica.getSelectedRow();
+            Persona personaSelezionata = personaDataModel.getPersonaAt(riga);
+            try{
+                EditorPersona editor = new EditorPersona(personaSelezionata);
+                editor.setSize(400, 300);
+                editor.setVisible(true);
+            }
+            catch(Exception e){
+                System.out.println("errore" + e);
+            }
+        }
+        else{
+            JOptionPane.showMessageDialog(null, "Seleziona una persona da modificare.");
+        }
     }
 
     private static void bottoneEliminaAction() {
-        // Logica per il bottone "Elimina"
         int riga = tabellaRubrica.getSelectedRow();
-        rubrica.remove(riga);
-        tabellaRubrica.remove(riga);
-        tabellaRubrica.revalidate();
-        tabellaRubrica.repaint();
-
+        Persona personaSelezionata = personaDataModel.getPersonaAt(riga);
+        int risposta = JOptionPane.showConfirmDialog(null, "Eliminare la persona " + personaSelezionata.getNome() + " " + personaSelezionata.getCognome() + "?", "Elimina", JOptionPane.YES_NO_OPTION);
+        if (risposta == JOptionPane.YES_OPTION) {
+            personaDataModel.removePersonaAt(riga);
+        }
+        
     }
 }
