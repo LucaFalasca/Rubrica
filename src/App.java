@@ -1,28 +1,31 @@
 import javax.swing.*;
 import java.util.ArrayList;
+import java.util.List;
 import java.awt.*;
 import javax.swing.table.DefaultTableModel;
+import java.io.File;
+import java.util.Scanner;
+import java.io.FileNotFoundException;
+import java.io.PrintStream;
 
 public class App {
     static JTable tabellaRubrica;
     static DefaultTableModel modelloTabella;
-    static ArrayList<Persona> rubrica;
+    static List<Persona> rubrica;
     static PersonaDataModel personaDataModel;
+    
     public static void main(String[] args) throws Exception {
 
-        Persona persona1 = new Persona("Mario", "Rossi", "Via Roma 1", "1234567890", 30);
-        Persona persona2 = new Persona("Luigi", "Verdi", "Via Milano 2", "0987654321", 25);
-        Persona persona3 = new Persona("Giulia", "Bianchi", "Via Napoli 3", "1112223334", 28);
         rubrica = new ArrayList<>();
-        rubrica.add(persona1);
-        rubrica.add(persona2);
-        rubrica.add(persona3);
 
-        ArrayList<Persona> rubrica = new ArrayList<>();
-
-        rubrica.add(persona1);
-        rubrica.add(persona2);
-        rubrica.add(persona3);
+        try{
+            File file = new File("src/informazioni.txt");
+            rubrica = extractPersoneFromFile(file);
+        }catch(Exception e){
+            JOptionPane.showMessageDialog(null, "Errore durante la lettura del file");
+            System.out.println("Errore" + e);
+        }
+        
         String[] colonne = {"Nome", "Cognome", "Telefono"};
         personaDataModel = new PersonaDataModel(rubrica, colonne);
 
@@ -62,6 +65,7 @@ public class App {
             EditorPersona editor = new EditorPersona(Persona.class);
             editor.setSize(400, 300);
             editor.setVisible(true);
+            savePersoneToFile(rubrica, new File("src/informazioni.txt"));
         }
         catch(Exception e){
             System.out.println("ErroreNuovo" + e);
@@ -77,6 +81,7 @@ public class App {
                 EditorPersona editor = new EditorPersona(personaSelezionata);
                 editor.setSize(400, 300);
                 editor.setVisible(true);
+                savePersoneToFile(rubrica, new File("src/informazioni.txt"));
             }
             catch(Exception e){
                 System.out.println("errore" + e);
@@ -94,6 +99,46 @@ public class App {
         if (risposta == JOptionPane.YES_OPTION) {
             personaDataModel.removePersonaAt(riga);
         }
+        try {
+            savePersoneToFile(rubrica, new File("src/informazioni.txt"));
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(null, "Errore durante il salvataggio");
+        }
         
+    }
+
+    private static List<Persona> extractPersoneFromFile(File file) throws FileNotFoundException {
+        List<Persona> persone = new ArrayList<>();
+        Scanner scanner = new Scanner(file);
+        while (scanner.hasNextLine()) {
+            String line = scanner.nextLine();
+            String[] parts = line.split(";");
+            if (parts.length == 5) {
+                String nome = parts[0].trim();
+                String cognome = parts[1].trim();
+                String indirizzo = parts[2].trim();
+                String telefono = parts[3].trim();
+                int eta = Integer.parseInt(parts[4].trim());
+                Persona persona = new Persona(nome, cognome, indirizzo, telefono, eta);
+                persone.add(persona);
+            }
+        }
+        scanner.close();
+        return persone;
+    }
+
+    private static void savePersoneToFile(List<Persona> persone, File file) throws Exception {
+        StringBuilder sb = new StringBuilder();
+        for (Persona persona : persone) {
+            sb.append(persona.getNome()).append(";")
+              .append(persona.getCognome()).append(";")
+              .append(persona.getIndirizzo()).append(";")
+              .append(persona.getTelefono()).append(";")
+              .append(persona.getEta()).append("\n");
+        }
+        PrintStream out = new PrintStream(file);
+        out.print(sb.toString());
+        out.close();
+        System.out.println("Salvataggio completato");
     }
 }

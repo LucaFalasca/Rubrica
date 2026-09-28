@@ -43,7 +43,6 @@ public class EditorPersona extends JFrame {
     }
 
     private void bottoneSalvaAction() {
-        // Eumero tutti i campi per vedere se sono vuoti
         try {
             Persona newPersona = new Persona(
                 campiTesto.get("nome").getText(),

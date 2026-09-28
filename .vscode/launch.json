@@ -1,0 +1,13 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "type": "java",
+            "name": "Rubrica (Swing)",
+            "request": "launch",
+            "mainClass": "App",
+            "javaExec": "/usr/lib/jvm/java-latest-openjdk/bin/java",
+            "console": "integratedTerminal"
+        }
+    ]
+}
