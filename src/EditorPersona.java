@@ -20,7 +20,8 @@ public class EditorPersona extends JFrame {
 
         pannello.setLayout(new GridLayout(campiPersona.length + 1, 2));
         for (Field campo : campiPersona) {
-            JLabel label = new JLabel(campo.getName() + ":");
+            String nomeCampo = campo.getName().substring(0, 1).toUpperCase() + campo.getName().substring(1);
+            JLabel label = new JLabel(nomeCampo + ":");
             JTextField textField = new JTextField(20);
             campiTesto.put(campo.getName(), textField);
             pannello.add(label);
