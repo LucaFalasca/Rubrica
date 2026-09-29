@@ -20,6 +20,9 @@ public class App {
 
         try{
             File file = new File("src/informazioni.txt");
+            if (!file.exists()) {
+                file.createNewFile();
+            }
             rubrica = extractPersoneFromFile(file);
         }catch(Exception e){
             JOptionPane.showMessageDialog(null, "Errore durante la lettura del file");

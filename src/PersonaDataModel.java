@@ -41,6 +41,11 @@ public class PersonaDataModel extends AbstractTableModel{
         return persone.size();
     }
 
+    @Override 
+    public String getColumnName(int column) {
+        return colonne[column];
+    }
+
     @Override
     public Object getValueAt(int rowIndex, int columnIndex) {
         Persona persona = getPersonaAt(rowIndex);
