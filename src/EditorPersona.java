@@ -1,6 +1,8 @@
 import javax.swing.*;
 import java.util.*;
 import java.awt.GridLayout;
+import java.io.File;
+import java.io.PrintStream;
 import java.lang.reflect.Field;
 
 public class EditorPersona extends JFrame {
@@ -53,9 +55,11 @@ public class EditorPersona extends JFrame {
             );
             if (this.persona == null) {
                 App.personaDataModel.addPersona(newPersona);
+                FileManager.savePersoneToFile(App.personaDataModel.getPersone(), new File("src/informazioni.txt"));
                 dispose();
             } else {
                 App.personaDataModel.updatePersonaAt(App.tabellaRubrica.getSelectedRow(), newPersona);
+                FileManager.savePersoneToFile(App.personaDataModel.getPersone(), new File("src/informazioni.txt"));
                 dispose();
             }
         }
@@ -67,12 +71,17 @@ public class EditorPersona extends JFrame {
             JOptionPane.showMessageDialog(this, e.getMessage(), "Errore", JOptionPane.ERROR_MESSAGE);
             return;
         } 
+        catch (Exception e) {
+            JOptionPane.showMessageDialog(this, "Errore durante il salvataggio", "Errore", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
         
     }
 
     private void bottoneAnnullaAction() {
         dispose();
     }
-        
+    
+    
 
 }

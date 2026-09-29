@@ -23,7 +23,7 @@ public class App {
             if (!file.exists()) {
                 file.createNewFile();
             }
-            rubrica = extractPersoneFromFile(file);
+            rubrica = FileManager.extractPersoneFromFile(file);
         }catch(Exception e){
             JOptionPane.showMessageDialog(null, "Errore durante la lettura del file");
             System.out.println("Errore" + e);
@@ -68,7 +68,6 @@ public class App {
             EditorPersona editor = new EditorPersona(Persona.class);
             editor.setSize(400, 300);
             editor.setVisible(true);
-            savePersoneToFile(rubrica, new File("src/informazioni.txt"));
         }
         catch(Exception e){
             System.out.println("ErroreNuovo" + e);
@@ -84,7 +83,6 @@ public class App {
                 EditorPersona editor = new EditorPersona(personaSelezionata);
                 editor.setSize(400, 300);
                 editor.setVisible(true);
-                savePersoneToFile(rubrica, new File("src/informazioni.txt"));
             }
             catch(Exception e){
                 System.out.println("errore" + e);
@@ -103,45 +101,14 @@ public class App {
             personaDataModel.removePersonaAt(riga);
         }
         try {
-            savePersoneToFile(rubrica, new File("src/informazioni.txt"));
+            FileManager.savePersoneToFile(rubrica, new File("src/informazioni.txt"));
         } catch (Exception e) {
             JOptionPane.showMessageDialog(null, "Errore durante il salvataggio");
         }
         
     }
 
-    private static List<Persona> extractPersoneFromFile(File file) throws FileNotFoundException {
-        List<Persona> persone = new ArrayList<>();
-        Scanner scanner = new Scanner(file);
-        while (scanner.hasNextLine()) {
-            String line = scanner.nextLine();
-            String[] parts = line.split(";");
-            if (parts.length == 5) {
-                String nome = parts[0].trim();
-                String cognome = parts[1].trim();
-                String indirizzo = parts[2].trim();
-                String telefono = parts[3].trim();
-                int eta = Integer.parseInt(parts[4].trim());
-                Persona persona = new Persona(nome, cognome, indirizzo, telefono, eta);
-                persone.add(persona);
-            }
-        }
-        scanner.close();
-        return persone;
-    }
+    
 
-    private static void savePersoneToFile(List<Persona> persone, File file) throws Exception {
-        StringBuilder sb = new StringBuilder();
-        for (Persona persona : persone) {
-            sb.append(persona.getNome()).append(";")
-              .append(persona.getCognome()).append(";")
-              .append(persona.getIndirizzo()).append(";")
-              .append(persona.getTelefono()).append(";")
-              .append(persona.getEta()).append("\n");
-        }
-        PrintStream out = new PrintStream(file);
-        out.print(sb.toString());
-        out.close();
-        System.out.println("Salvataggio completato");
-    }
+    
 }

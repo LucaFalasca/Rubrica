@@ -12,6 +12,10 @@ public class PersonaDataModel extends AbstractTableModel{
         this.colonne = colonne;
     }
 
+    public List<Persona> getPersone() {
+        return persone;
+    }
+
     public Persona getPersonaAt(int riga){
         return persone.get(riga);
     }
