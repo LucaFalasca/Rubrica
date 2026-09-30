@@ -4,9 +4,6 @@ import java.util.List;
 import java.awt.*;
 import javax.swing.table.DefaultTableModel;
 import java.io.File;
-import java.util.Scanner;
-import java.io.FileNotFoundException;
-import java.io.PrintStream;
 
 public class App {
     static JTable tabellaRubrica;
@@ -89,21 +86,26 @@ public class App {
             }
         }
         else{
-            JOptionPane.showMessageDialog(null, "Seleziona una persona da modificare.");
+            JOptionPane.showMessageDialog(null, "Seleziona una persona da modificare");
         }
     }
 
     private static void bottoneEliminaAction() {
-        int riga = tabellaRubrica.getSelectedRow();
-        Persona personaSelezionata = personaDataModel.getPersonaAt(riga);
-        int risposta = JOptionPane.showConfirmDialog(null, "Eliminare la persona " + personaSelezionata.getNome() + " " + personaSelezionata.getCognome() + "?", "Elimina", JOptionPane.YES_NO_OPTION);
-        if (risposta == JOptionPane.YES_OPTION) {
-            personaDataModel.removePersonaAt(riga);
+        if(tabellaRubrica.getSelectedRow() != -1){
+            int riga = tabellaRubrica.getSelectedRow();
+            Persona personaSelezionata = personaDataModel.getPersonaAt(riga);
+            int risposta = JOptionPane.showConfirmDialog(null, "Eliminare la persona " + personaSelezionata.getNome() + " " + personaSelezionata.getCognome() + "?", "Elimina", JOptionPane.YES_NO_OPTION);
+            if (risposta == JOptionPane.YES_OPTION) {
+                personaDataModel.removePersonaAt(riga);
+            }
+            try {
+                FileManager.savePersoneToFile(rubrica, new File("src/informazioni.txt"));
+            } catch (Exception e) {
+                JOptionPane.showMessageDialog(null, "Errore durante il salvataggio");
+            }
         }
-        try {
-            FileManager.savePersoneToFile(rubrica, new File("src/informazioni.txt"));
-        } catch (Exception e) {
-            JOptionPane.showMessageDialog(null, "Errore durante il salvataggio");
+        else{
+            JOptionPane.showMessageDialog(null, "Seleziona una persona da eliminare");
         }
         
     }

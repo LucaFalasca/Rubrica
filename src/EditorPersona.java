@@ -2,7 +2,6 @@ import javax.swing.*;
 import java.util.*;
 import java.awt.GridLayout;
 import java.io.File;
-import java.io.PrintStream;
 import java.lang.reflect.Field;
 
 public class EditorPersona extends JFrame {
